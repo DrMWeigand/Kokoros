@@ -31,3 +31,5 @@ ort = { version = "2.0.0-rc.4", features = ["coreml"] }
 
 [target.'cfg(not(target_os = "macos"))'.dependencies]
 ort = { version = "2.0.0-rc.4", features = [] }
+
+lame = "0.1"

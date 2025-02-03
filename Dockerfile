@@ -11,7 +11,7 @@ RUN pip install requests torch numpy && python fetch_voices.py
 
 FROM rust:1.84.0-slim-bookworm AS builderrs
 
-RUN apt-get update -qq && apt-get install -qq -y pkg-config libssl-dev clang git cmake && rustup component add rustfmt
+RUN apt-get update -qq && apt-get install -qq -y pkg-config libssl-dev clang git cmake && rustup component add rustfmt && apt-get update && apt-get install -y libmp3lame-dev
 
 WORKDIR /app
 
