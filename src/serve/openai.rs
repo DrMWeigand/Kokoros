@@ -68,7 +68,9 @@ extern "C" {
 
 fn encode_to_mp3(raw_audio: &[f32]) -> Result<Vec<u8>, StatusCode> {
     let mut lame = Lame::new().expect("Failed to initialize LAME");
-    lame.set_channels(1).expect("Failed to set channels");
+    // For MP3 encoding, set channels to 2 so that we can supply two channels of data.
+    // We duplicate the mono samples to satisfy the check.
+    lame.set_channels(2).expect("Failed to set channels");
     lame.set_sample_rate(TTSKoko::SAMPLE_RATE as u32).expect("Failed to set sample rate");
     lame.set_quality(3).expect("Failed to set quality"); // Quality range: 0 (best) to 9 (worst)
     lame.init_params().expect("Failed to initialize parameters");
@@ -82,7 +84,7 @@ fn encode_to_mp3(raw_audio: &[f32]) -> Result<Vec<u8>, StatusCode> {
     let mut mp3_data = Vec::new();
     let mut mp3_buffer = vec![0u8; pcm.len() * 2]; // Buffer size estimation
 
-    let encoded = lame.encode(&pcm, &[], &mut mp3_buffer)
+    let encoded = lame.encode(&pcm, &pcm, &mut mp3_buffer)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     mp3_data.extend_from_slice(&mp3_buffer[..encoded]);
 
