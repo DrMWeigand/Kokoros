@@ -6,13 +6,18 @@ use base64::Engine;
 use serde::{Deserialize, Serialize};
 use tower_http::cors::CorsLayer;
 
+fn default_true() -> bool {
+    true
+}
+
 #[derive(Deserialize)]
 struct TTSRequest {
     #[allow(dead_code)]
     model: String,
     input: String,
     voice: Option<String>,
-    return_audio: Option<bool>,
+    #[serde(default = "default_true")]
+    return_audio: bool,
 }
 
 #[derive(Serialize)]
@@ -34,7 +39,7 @@ async fn handle_tts(
     Json(payload): Json<TTSRequest>,
 ) -> Result<Json<TTSResponse>, StatusCode> {
     let voice = payload.voice.unwrap_or_else(|| "af_sky".to_string());
-    let return_audio = payload.return_audio.unwrap_or(false);
+    let return_audio = payload.return_audio;
 
     match tts.tts_raw_audio(&payload.input, "en-us", &voice) {
         Ok(raw_audio) => {
