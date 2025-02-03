@@ -35,4 +35,4 @@ RUN chmod +x ./target/release/koko && apt-get update -qq && apt-get install -qq 
 
 EXPOSE 3000
 
-ENTRYPOINT [ "./target/release/koko" ] 
+ENTRYPOINT [ "./target/release/koko", "--oai" ]
