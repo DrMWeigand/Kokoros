@@ -24,6 +24,17 @@ One can directly call `koko` in terminal to synthesize audio.
 
 `kokoros` uses a relative small model 87M params, while results in extremly good quality voices results.
 
+## Key Improvements in this Fork
+
+- **OpenAI API Compatible Binary Audio Output:**  
+  The TTS endpoint now directly returns raw binary audio when `return_audio` is true. With the correct MIME types (`audio/mpeg` for MP3 or `audio/wav` for WAV), this output is fully compatible with systems expecting OpenAI's API responses (e.g. open webui).
+
+- **MP3 Audio Output Support:**  
+  In addition to WAV, the API now provides MP3 output using the LAME encoder. The encoder is safeguarded by a global mutex to ensure thread-safe operations during encoding.
+
+- **Simplified Deployment:**  
+  Get up and running quickly using the prebuilt Docker image and Docker Compose stack provided. This painless deployment approach lets you integrate Kokoro Rust into production environments with minimal effort.
+
 Languge support:
 
 - [x] English;
