@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  kokoros:
+    image: ghcr.io/drmweigand/kokoros:latest
+    ports:
+      - "3001:3000"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/v1/audio/speech"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
