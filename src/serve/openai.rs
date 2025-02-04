@@ -4,7 +4,7 @@ use axum::http::{StatusCode, header::CONTENT_TYPE};
 use axum::{
     extract::State,
     response::{IntoResponse, Response},
-    routing::post,
+    routing::{post, get},
     Json, Router,
 };
 use base64::Engine;
@@ -56,9 +56,11 @@ struct TTSResponse {
     audio: Option<String>,     // Can be used if you need to return base64 encoded audio.
 }
 
+/// Creates and configures the router for our API, adding both our TTS endpoint and a health check endpoint.
 pub async fn create_server(tts: TTSKoko) -> Router {
     Router::new()
         .route("/v1/audio/speech", post(handle_tts))
+        .route("/health", get(handle_health))
         .layer(CorsLayer::permissive())
         .with_state(tts)
 }
@@ -133,6 +135,12 @@ fn encode_to_mp3(raw_audio: &[f32]) -> Result<Vec<u8>, StatusCode> {
     mp3_data.extend_from_slice(&flush_buffer[..flush_len]);
 
     Ok(mp3_data)
+}
+
+/// Health check endpoint handler.
+/// Returns a 200 OK with a simple message indicating the API is healthy.
+async fn handle_health() -> impl IntoResponse {
+    (StatusCode::OK, "healthy")
 }
 
 /// The handler now returns a response that is fully compatible with the OpenAI TTS API:
