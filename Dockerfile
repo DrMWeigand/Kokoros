@@ -33,7 +33,7 @@ COPY --from=builderpy /kokoro-v0_19.onnx ./checkpoints/kokoro-v0_19.onnx
 
 RUN chmod +x ./target/release/koko \
     && apt-get update -qq \
-    && apt-get install -qq -y pkg-config libssl-dev libmp3lame0 \
+    && apt-get install -qq -y pkg-config libssl-dev libmp3lame0 curl \
     && ldconfig
 
 EXPOSE 3000
